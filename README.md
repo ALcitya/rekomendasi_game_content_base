@@ -30,7 +30,7 @@ Goal yang diharapkan adalah, sebuah sistem yang dapat memberikan rekomendasi nam
 
 **Rubrik/Kriteria Tambahan (Opsional)**:
 ### Solution statements
-    Sistem rekomendasi nantinya akan mengambil nilai input dari user, lalu dicocokkan kedalam kolom untuk mencari inputan yang sesuai dengan user, inputan itu baik berupa genre games maupun nama publisher. Lalu sistem akan memilihkan 5 nama games teratas untuk diberikan kepada user.
+Sistem rekomendasi nantinya akan mengambil nilai input dari user, lalu dicocokkan kedalam kolom untuk mencari inputan yang sesuai dengan user, inputan itu baik berupa genre games maupun nama publisher. Lalu sistem akan memilihkan 5 nama games teratas untuk diberikan kepada user.
 
 ## Data Understanding
 Paragraf awal bagian ini menjelaskan informasi mengenai jumlah data, kondisi data, dan informasi mengenai data yang digunakan. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
