@@ -91,13 +91,30 @@ Model yang digunakan adalah content base filtering, alasannya agar dapat merekom
 - tfidf_matrix, menampung nilai matriks.
 - cosine_similarity akan menghitung kemiripan antara setiap baris di matriks pertama dengan setiap baris di matriks kedua
 
+## Membuat fungsi rekomendasi berdasarkan genre
+- fungsi ini akan mengembalikan nilai genre sesuai dengan inputan, dan mencarikan nama games dengan genre yang sama
+
+## Membuat fungsi rekomendasi berdasarkan publisher
+- fungsi ini akan mengembalikan nilai publisher sesuai dengan inputan, dan mencarikan nama games dengan publisher yang sama
+
+## parameter yang digunakan
+- input value(genre/publisher): menampung value dari inputan
+- top_n=5: memberikan nilai default untuk menampikan 5 nilai teratas
+## note
+urutan dari hasil akan berdasarkan metatric_review_score yang didapat setiap game
+  
 ## Evaluation
-Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.
+Matriks Evaluasi yang digunakan merupakan evaluasi kualitatif
 
-Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.
+dilakukan dengan cara:
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
+- Memilih sebuah genre.
+- Menjalankan sistem untuk mendapatkan daftar game yang direkomendasikan.
+- Secara manual atau subjektif memeriksa apakah game-game yang direkomendasikan terlihat relevan dengan genre yang dimasukkan.
+
+## insight
+Berdasarkan hasil yang didapatkan, baik melaui pengembangan model atau evaluasi. Model dapat memberikan jawaban rekomendasi game berdasarkan genre yang telah dimasukkan, hal ini sudah sejalan dengan pertanyaan bisnis diawal. Yaitu untuk merekomendasikan games berdasarkan kesukaan genre yang sama.
+
 
 **---Ini adalah bagian akhir laporan---**
 
