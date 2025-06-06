@@ -273,7 +273,7 @@ recommend_games_by_genre("JRPG", top_n=5)
 
 """fungsi recommend_games_by_genre akan mengirimkan 2 parameter, yakni input string, dan berapa jumlah baris yang ditampilkan
 
-## Membuat rekomendasi berdasarkan rate
+## Membuat fungsi rekomendasi berdasarkan publisher
 """
 
 def recommend_games_by_publisher(publisher, top_n=5):
@@ -301,4 +301,60 @@ recommend_games_by_publisher("Adult Swim", top_n=5)
 
 """fungsi diatas bekerja dengan cara yang sama seperti genre.
 contohnya ketika saya mengetikkan Adult Swim, maka fungsi akan mencari 5 games teratas yang memiliki publisher yang sama, yakni Adult Swim
+
+# Evaluasi
+
+## Pilih Genre
+"""
+
+selected_genre = 'FPS'
+
+"""Memilih genre yang ingin kita check kemiripannya"""
+
+game_index = df_clean[df_clean['genres'].str.contains(selected_genre, case=False, na=False)].index[0]
+
+"""fungsi **str.contains()** mencari konten yang mengandung string tertentu. ini diperlukan karena kolom genre berbentuk list. karena itu tidak bisa jika hanya memasukkan input saya, sistem harus mencari content string didalam list
+
+## Dapatkan Skor Kemiripan
+"""
+
+similarity_scores = list(enumerate(cosine_sim[game_index]))
+
+"""mengambil skor kemiripan dari matriks, dan merubahnya menjadi pasangan indeks dan skor
+cosine_sim = merupakan matriks similarity yang telah dihitung.
+
+[game_index] : mengakses baris dalam cosine_sim berdasarkan indeks.
+
+enumarate():mengembalikan objek enumerasi, yang akan menghasilkan pasangan indeks dan nilai
+
+## Urutkan Skor Kemiripan
+"""
+
+sorted_similar_games = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
+
+"""berfungsi untuk mengurutkan games berdasarkan scores similarity yang didapatkan
+
+
+---
+sorted() mengembalikan list baru yang berisi semua item
+
+key=lambda x: x[1]: berfungsi sebagai skor indeks untuk melakukan pengurutan
+
+reverse=True: berfungsi mengembalikan nilai secara Descending, dari besar ke kecil
+
+## Tampilkan Genre yang Mirip
+"""
+
+print(f"Top 10 similar genre for '{selected_genre}':")
+for i, (index, score) in enumerate(sorted_similar_games[1:11]):
+    game_name = df_clean.iloc[index]['name']
+    print(f"{i+1}. {game_name} (Similarity Score: {score:.4f})")
+
+"""fungsi print diatas mengembalikan isi berdasarkan inputan yang diberikan
+
+Perintah for akan melakukan pengulangan berdasarkan daftar game yang sudah diurutkan
+
+df_clean.iloc[index]['name'] berfungsi untuk mengambil nama game dari dataset
+
+print(f"{i+1}. {game_name} (Similarity Score: {score:.4f})") berfungsi menampilkan nama games apa saja yang memiliki kemiripan genre
 """
