@@ -33,21 +33,36 @@ Goal yang diharapkan adalah, sebuah sistem yang dapat memberikan rekomendasi nam
 Sistem rekomendasi nantinya akan mengambil nilai input dari user, lalu dicocokkan kedalam kolom untuk mencari inputan yang sesuai dengan user, inputan itu baik berupa genre games maupun nama publisher. Lalu sistem akan memilihkan 5 nama games teratas untuk diberikan kepada user.
 
 ## Data Understanding
-Paragraf awal bagian ini menjelaskan informasi mengenai jumlah data, kondisi data, dan informasi mengenai data yang digunakan. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
+Dataset ini diambil dari Metacritic. sebuah platform kolektif milik pemain game. yang dihimpun dengan berbagai jenis judul game. Link selengkapnya dapat dilihat [disini](https://www.kaggle.com/datasets/uuratl/metacritic-games-12-23-2024).
+
+## fitur Dataset
+- Dataset ini memiliki 13990 baris
+- dataset ini memiliki 12 kolom
+
+## Kondisi Awal Dataset
+Dataset ini memiliki 2 kolom yang terdapat missing value, yakni kolom user_review_count 1557 missing value. Dan kolom esrb sebanyak 2103 missing value
 
 Selanjutnya, uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
 
 Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
-
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data beserta insight atau exploratory data analysis.
+- Unnamed: 0 : merupakan kolom yang terbuat ketika library kagglehub mengambil dataset
+- name : merupakan nama dari game
+- metacritic_review_count : merupakan jumlah kritik yang diterima terhadap game, didalam metacritic
+- metacritic_review_score : merupakan rata-rata score game dari pengguna, didalam metacritic
+- user_review_count : merupakan jumlah review dari pengguna
+- user_review_score : merupakan nilai score yang diberikan pengguna
+- developer : merupakan nama dari pihak yang membuat game
+- publisher : merupakan nama dari pihak yang merilis game
+- platforms : merupakan platform dari game yang dimainkan
+- genres : merupakan genre dari game yang disebutkan
+- esrb : merupakan kategori usia yang dapat memainkan game
+- must_play : merupakan penilaian apakah game layak dimainkan atau tidak
 
 ## Data Preparation
-Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
 
+1. Mengatasi missing value di kolom user_review_count dan esrb. Dengan cara menghapus baris yang terdapat missing value
+2. Mengecek Duplikasi
+3. Menghapus kolom Unnamed : 0
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan proses data preparation yang dilakukan
 - Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
