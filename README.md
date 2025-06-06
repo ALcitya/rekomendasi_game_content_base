@@ -60,19 +60,36 @@ Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
 
 ## Data Preparation
 
-1. Mengatasi missing value di kolom user_review_count dan esrb. Dengan cara menghapus baris yang terdapat missing value
-2. Mengecek Duplikasi
-3. Menghapus kolom Unnamed : 0
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
+1. Mengatasi missing value di kolom user_review_count dan esrb. Dengan cara menghapus baris yang terdapat missing value: berfungsi untuk mempermudah pelatihan model
+2. Mengecek Duplikasi : berfungsi mencegah dataset memiliki baris yang sama
+3. Menghapus kolom Unnamed : 0 berfungsi menghilangkan kolom yang aslinya tidak ada
+4. Mengecek nilai unique genres berfungsi mempermudah inputan user dalam memilih genre nantinya
+5. mengecek nilai unique publisher berfungsi mengetahui publishe apa saja didalam data
+6. Mengurutkan berdasarkan genre: agar model lebih mudah mencari berdasarkan genre
+7. Melakukan normalisasi terhadap kolom metacritic_review_count, user_review_count, developer, publiser, esrb. Dengan cara mereplace value string didalam kolom dengan nilai kosong. berfungsi agar kolom hanya memiliki nilai numeric
+8. Merubah type data metacritic_review_count, metacritic_review_score, user_review_count, user_review_score menjadi int dan float. agar type data kolom lebih sesuai dengan valuenya
+9. membuat kolom combined_features dari kolom name, developer, publisher, genre, esrb. Membuat agar kolom penting menjadi satu kolom, berfungsi mempemudah fungsi tf-idf untuk hanya fokus ke satu kolom
+10. menormalisasi kolom combined_features, berfungsi untuk menyeragamkan text agar mudah menghitung cosine similarity mengunakan tf-idf
 
 ## Modeling
-Tahapan ini membahas mengenai model sisten rekomendasi yang Anda buat untuk menyelesaikan permasalahan. Sajikan top-N recommendation sebagai output.
+Model yang digunakan adalah content base filtering, alasannya agar dapat merekomendasikan game berdasarkan kesamaan fitur yang mereka miliki, dalam hal ini genres dan publisher. Content base filtering sendiri dapat merekomendasikan games tanpa perlu data pengguna lain, yang mana dalam hal ini cocok dengan type dataset saya.
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menyajikan dua solusi rekomendasi dengan algoritma yang berbeda.
-- Menjelaskan kelebihan dan kekurangan dari solusi/pendekatan yang dipilih.
+## Fungsi tf-idf
+- TF-IDF berfungsi sebagai fitur extractor, dimana akan merubah text dalam kolom combined_features, menjadi nilai numerik agar lebih mudah dimengerti oleh algoritma, untuk menghitung kemiripan (cosine similarity)
+- TF menghitung seberapa sering sebuah angka muncul dalam dokumen
+- IDF memberikan bobot lebih rendah terhadap kata-kata yang muncul dibanyak dokumen, dan bobot lebih tinggi terhadap kata-kata yang jarang muncul di banyak dokumen
+
+## Cosine Similarity
+- berfungsi menghitung kemiripan antara item-item didalam game berdasarkan vektor yang telah diubah TF-IDF
+
+## parameter yang digunakan
+- TF-IDF mengunakan stop_words='english'
+- cosine_similarity mengunakan 2 parameter yang sama, yakni tfidf_matrix
+
+## penjelasan parameter
+- stop_words='english' memberitahu tfidfVectorizer untuk mengabaikan kata-kata umum dalam bahasa inggris seperti (the, in, is, dll)
+- tfidf_matrix, menampung nilai matriks.
+- cosine_similarity akan menghitung kemiripan antara setiap baris di matriks pertama dengan setiap baris di matriks kedua
 
 ## Evaluation
 Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.
