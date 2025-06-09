@@ -10,7 +10,7 @@ Original file is located at
 
 # Pertanyaan Bisnis
 1. Bagaimana merekomendasikan game kepada pengguna berdasarkan kesukaan genre yang sama
-2. Bagaimana merekomendasikan publisher game yang sama kepada pengguna
+2. Bagaimana menghitung akurasi berbasis evaluasi, berdasarkan sistem rekomendasi games berdasarkan genre
 
 #Link dataset
 kaagle : https://www.kaggle.com/datasets/uuratl/metacritic-games-12-23-2024
@@ -112,19 +112,12 @@ df_clean = df_clean.drop('Unnamed: 0', axis=1)
 ---
 fungsi drop akan langsung menghapus nama kolom dalam argumen, dalam hal ini 'Unnamed: 0'
 
-## Mengecek Nama Unik
+## Mengecek Nilai Unik
 """
 
 df_clean['genres'].unique()
 
-"""Menjabarkan nilai unique dari genres, sebagai pertimbangan masukan untuk fungsi rekomendasi nanti"""
-
-df_clean['publisher'].unique()
-
-"""Mengecek nilai unique dari publisher, untuk pertimbangan masukan fungsi rekomendasi nanti
-
----
-fungsi unique mengambil nilai unik dari setiap kolom yang disebutkan
+"""Menjabarkan nilai unique dari genres, sebagai pertimbangan masukan untuk fungsi rekomendasi nanti
 
 ## Mengurutkan berdasarkan Genre Games
 """
@@ -217,7 +210,22 @@ df_clean['combined_features']=df_clean['combined_features'].apply(clean_text)
 fungsi text.lower mengubah setiap text menjadi lower case.
 fungsi re.sub menghapus tanda baca dan angka untuk setiap text
 
-# Model Development dengan Content Based Filtering
+## Membuat Daftar Preferensi Pengguna
+"""
+
+user_preferences = {
+    "Open-World Action": ["The Legend of Zelda: Ocarina of Time", "Grand Theft Auto IV"],
+    "3D Platformer": ["Super Mario Galaxy"],
+    "JRPG": ["Persona 5 Royal"],
+    "Action RPG": ["Diablo III"],
+    "MOBA":["Dota 2"],
+    "Soccer":["FIFA 21"],
+    "MMORPG":["World of Warcraft"],
+    "Turn-Based Strategy":["Total War: Shogun 2"],
+    "Virtual Life":["The Sims"]
+}
+
+"""user_preferences berfungsi menampung preferensi games pilihan pengguna, berdasarkan 10 genre teratas
 
 ## TF-IDF Vectorizer
 """
@@ -232,7 +240,7 @@ tfidf_matrix = tfidf.fit_transform(df_clean['combined_features'])
 
 **TfidfVectorizer(stop_words='english'**) memanggil object tf-idf dari library sklearn. **TF-IDF** berguna untuk mengetahui seberapa penting suatu kata dalam setiap dokumen, **stop_words=english** membuat model mengabaikan stop words umum dalam bahasa inggriss
 fungsi **fit** belajar mengenail vocabulary dari kolom combined_features, untuk mengetahui nilai unique dan distribusi didalam kolom
-fungsi **transform**, untuk mengconvert data kedalam tf-idf matriks.
+fungsi **transform**, untuk mengubah teks menjadi bentuk numeric
 
 ## Menghitung cosine similarity
 """
@@ -243,6 +251,8 @@ print('Ukuran matriks cosine similarity:', cosine_sim.shape)
 """cosine_sim, berfungsi untuk menghitung similarity antara 2 arrays, dalam hal ini, saya menghitung cosine similarity dalam setiap permainan.
 fungsi **shape** mencetak ukuran dari matriks dalam hal ini kesamaan antara setiap game dengan game yang lain, karena tfidf_matrix dipanggil 2 kali.
 nilai 9902 mewakili baris dan kolom, juga dapat berarti jumlah game dalam dataset yang sudah dibersihkan
+
+# Model Development dengan Content Based Filtering
 
 ## Membuat fungsi rekomendasi berdasarkan genre
 """
@@ -269,92 +279,64 @@ fungsi na=False akan mengangap valued nan sebagai tidak ada
 **fungsi return** akan mengembalikan nilai value, dalam hal ini genres dan name
 """
 
-recommend_games_by_genre("JRPG", top_n=5)
+recommended_games_by_genre = {}
 
-"""fungsi recommend_games_by_genre akan mengirimkan 2 parameter, yakni input string, dan berapa jumlah baris yang ditampilkan
+for genre, games in user_preferences.items():
+    recommended_games_by_genre[genre] = recommend_games_by_genre(genre, top_n=5)
 
-## Membuat fungsi rekomendasi berdasarkan publisher
-"""
+display(recommended_games_by_genre)
 
-def recommend_games_by_publisher(publisher, top_n=5):
-    # Filter the dataframe by the specified publisher
-    publisher_games = df_clean[df_clean['publisher'].str.lower().str.contains(publisher.lower(), na=False)]
-
-    if publisher_games.empty:
-        print(f"No games found for publisher: {publisher}")
-        return pd.DataFrame(columns=['publisher', 'name'])
-
-    # Sort the games by metacritic_review_score in descending order
-    recommended_games = publisher_games.sort_values(by='metacritic_review_score', ascending=False).head(top_n)
-
-    return recommended_games[['publisher', 'name']]
-
-"""fungsi **str.lower** mengubah value dari kolom publisher menjadi huruf kecil.
-fungsi **str.lower** mengecek apakah string yang dimasukkan tersedia di kolom publisher. yang juga sudah diubah ke huruf kecil.
-fungsi na=False akan mengangap valued NAN sebagai tidak ada
-**if publisher_games.empty** mengecek apakah data yang dimasukkan tidak ada didalam kolom publisher
-**recommended_games** mengurutkan variabel publisher_games berdasarkan kolom metacritic_review_score secara Menurun
-**fungsi return** akan mengembalikan nilai value, dalam hal ini publisher dan name
-"""
-
-recommend_games_by_publisher("Adult Swim", top_n=5)
-
-"""fungsi diatas bekerja dengan cara yang sama seperti genre.
-contohnya ketika saya mengetikkan Adult Swim, maka fungsi akan mencari 5 games teratas yang memiliki publisher yang sama, yakni Adult Swim
+"""sistem rekomendasi ini terdiri dari 3 langkah
+1. memanggil fungsi rekomendasi
+2. membuat perulangan untuk mendapatkan key dan items dari user_preferences. Dimana key adalah nama genre dan items adalah nama game. nama game ini akan dimasukkan kedalam fungsi di pembangunan model untuk dicarikan rekomendasinya
+3. 5 Rekomendasi games teratas dari setiap genre akan ditampilkan
 
 # Evaluasi
-
-## Pilih Genre
 """
 
-selected_genre = 'FPS'
+precision_at_n_scores = []
+recall_at_n_scores = []
+f1_scores = []
 
-"""Memilih genre yang ingin kita check kemiripannya"""
+for genre, recommended_df in recommended_games_by_genre.items():
+    recommended_game_names = recommended_df['name'].tolist()
+    liked_games = user_preferences.get(genre, [])
 
-game_index = df_clean[df_clean['genres'].str.contains(selected_genre, case=False, na=False)].index[0]
+    relevant_recommendations = len(set(recommended_game_names) & set(liked_games))
+    n = len(recommended_game_names)
+    total_relevant_items = len(liked_games)
 
-"""fungsi **str.contains()** mencari konten yang mengandung string tertentu. ini diperlukan karena kolom genre berbentuk list. karena itu tidak bisa jika hanya memasukkan input saya, sistem harus mencari content string didalam list
+    precision_at_n = relevant_recommendations / n if n > 0 else 0
+    precision_at_n_scores.append(precision_at_n)
 
-## Dapatkan Skor Kemiripan
-"""
+    recall_at_n = relevant_recommendations / total_relevant_items if total_relevant_items > 0 else 0
+    recall_at_n_scores.append(recall_at_n)
 
-similarity_scores = list(enumerate(cosine_sim[game_index]))
+    f1_score = (2 * precision_at_n * recall_at_n) / (precision_at_n + recall_at_n) if (precision_at_n + recall_at_n) > 0 else 0
+    f1_scores.append(f1_score)
 
-"""mengambil skor kemiripan dari matriks, dan merubahnya menjadi pasangan indeks dan skor
-cosine_sim = merupakan matriks similarity yang telah dihitung.
-
-[game_index] : mengakses baris dalam cosine_sim berdasarkan indeks.
-
-enumarate():mengembalikan objek enumerasi, yang akan menghasilkan pasangan indeks dan nilai
-
-## Urutkan Skor Kemiripan
-"""
-
-sorted_similar_games = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
-
-"""berfungsi untuk mengurutkan games berdasarkan scores similarity yang didapatkan
+    print(f"Genre '{genre}':")
+    print(f"  Precision@{n}: {precision_at_n:.4f}")
+    print(f"  Recall@{n}: {recall_at_n:.4f}")
+    print(f"  F1-score@{n}: {f1_score:.4f}") # Display F1-score
+    print("-" * 20)
 
 
----
-sorted() mengembalikan list baru yang berisi semua item
+average_precision_at_n = sum(precision_at_n_scores) / len(precision_at_n_scores) if precision_at_n_scores else 0
+average_recall_at_n = sum(recall_at_n_scores) / len(recall_at_n_scores) if recall_at_n_scores else 0
+average_f1_score = sum(f1_scores) / len(f1_scores) if f1_scores else 0
 
-key=lambda x: x[1]: berfungsi sebagai skor indeks untuk melakukan pengurutan
+print(f"\nAverage Precision at N across all genres: {average_precision_at_n:.4f}")
+print(f"Average Recall at N across all genres: {average_recall_at_n:.4f}")
+print(f"Average F1-score at N across all genres: {average_f1_score:.4f}")
 
-reverse=True: berfungsi mengembalikan nilai secara Descending, dari besar ke kecil
+"""pertama 3 list untuk menampung precision, recall, dan f1_score dibuat.
 
-## Tampilkan Genre yang Mirip
-"""
+Lalu fungsi rekomendasi akan dipanggil kembali dengan menggunakan data dari user_preferences
 
-print(f"Top 10 similar genre for '{selected_genre}':")
-for i, (index, score) in enumerate(sorted_similar_games[1:11]):
-    game_name = df_clean.iloc[index]['name']
-    print(f"{i+1}. {game_name} (Similarity Score: {score:.4f})")
+Selanjutnya dihitung precision, recall, dan f1_score nya
 
-"""fungsi print diatas mengembalikan isi berdasarkan inputan yang diberikan
+hasil akhir dari precision, recall, f1_score dari setiap genre akan ditampilkan.
 
-Perintah for akan melakukan pengulangan berdasarkan daftar game yang sudah diurutkan
-
-df_clean.iloc[index]['name'] berfungsi untuk mengambil nama game dari dataset
-
-print(f"{i+1}. {game_name} (Similarity Score: {score:.4f})") berfungsi menampilkan nama games apa saja yang memiliki kemiripan genre
+rata-rata dari precision, recall, dan f1_score akan dihitung dan ditampilkan
 """
