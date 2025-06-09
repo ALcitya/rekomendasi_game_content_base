@@ -2,9 +2,9 @@
 
 ## Project Overview
 
-Ditengah perkembangan industri games yang berkembang pesat, game semakin banyak macamnya di pasar. Para pemain sering kali kebingungan dalam memilih games apa yang ingin mereka mainkan. Oleh karena itu, dibutuhkan suatu sistem rekomendasi, agar para pemain tidak lagi kesulitan dalam memilih games yang sesuai dengan selera mereka.
+Ditengah perkembangan industri game yang berkembang pesat, game semakin banyak macamnya di pasar. Para pemain sering kali kebingungan dalam memilih game apa yang ingin mereka mainkan. Oleh karena itu, dibutuhkan suatu sistem rekomendasi, agar para pemain tidak lagi kesulitan dalam memilih game yang sesuai dengan selera mereka.
 
-Projek ini saya buat, dengan harapan untuk membantu para pemain games untuk menemukan games sesuai minat mereka. Agar mereka tidak perlu menghabiskan banyak waktu dalam menjelahi pasar games
+Projek ini saya buat, dengan harapan untuk membantu para pemain game untuk menemukan game sesuai minat mereka. Agar mereka tidak perlu menghabiskan banyak waktu dalam menjelahi pasar game
 
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Sistem rekomendasi dapat memicu efek domino terhadap game dengan genre yang sama. seperti yang terlihat di artikel ini dimana kepopuleran suatu game sepak bola memicu keinginan developer lain untuk membuat game dengan genre yang sama. yang membuat semakin banyaknya pilihan yang bisa diterima pemain
@@ -18,25 +18,21 @@ Projek ini saya buat, dengan harapan untuk membantu para pemain games untuk mene
 
 Menjelaskan pernyataan masalah:
 - Bagaimana merekomendasikan game kepada pengguna berdasarkan kesukaan genre yang sama
-- Bagaimana merekomendasikan publisher game yang sama kepada pengguna
+- Bagaimana kesimpulan akurasi berbasis evaluasi, berdasarkan sistem rekomendasi game berdasarkan genre
 
 ### Goals
 
 Menjelaskan tujuan proyek :
 - Membuat sistem rekomendasi game berdasarkan genre yang sama
-- Membuat rekomendasi game, dengan nama publisher yang sama
+- Menarik kesimpulan akurasi model berbasis evaluasi, berdasatkan sistem rekomendasi game berdasarkan genre
 
-Goal yang diharapkan adalah, sebuah sistem yang dapat memberikan rekomendasi nama games. Dengan genre yang serupa dengan yang kita inputkan. juga memberikan rekomendasi nama games, berdasarkan nama publisher yang kita pililh
-
-**Rubrik/Kriteria Tambahan (Opsional)**:
-### Solution statements
-Sistem rekomendasi nantinya akan mengambil nilai input dari user, lalu dicocokkan kedalam kolom untuk mencari inputan yang sesuai dengan user, inputan itu baik berupa genre games maupun nama publisher. Lalu sistem akan memilihkan 5 nama games teratas untuk diberikan kepada user.
+Goal yang diharapkan adalah, sebuah sistem yang dapat memberikan rekomendasi nama game. Dengan genre yang serupa dengan yang kita inputkan. juga untuk menarik kesimpulan dari nilai metriks akurasi, berdasarkan sistem rekomendasi yang sudah dibangun.
 
 ## Data Understanding
-Dataset ini diambil dari Metacritic. sebuah platform kolektif milik pemain game. yang dihimpun dengan berbagai jenis judul game. Link selengkapnya dapat dilihat [disini](https://www.kaggle.com/datasets/uuratl/metacritic-games-12-23-2024).
+Dataset ini diambil dari Metacritic. sebuah platform kolektif milik pemain game. yang dihimpun dengan berbagai jenis judul game. Link selengkapnya dapat dilihat [disini](https://www.kaggle.com/datasets/uuratl/metacritic-game-12-23-2024).
 
 ## fitur Dataset
-- Dataset ini memiliki 13990 baris
+- Dataset ini memiliki 13390 baris
 - dataset ini memiliki 12 kolom
 
 ## Kondisi Awal Dataset
@@ -64,60 +60,106 @@ Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
 2. Mengecek Duplikasi : berfungsi mencegah dataset memiliki baris yang sama
 3. Menghapus kolom Unnamed : 0 berfungsi menghilangkan kolom yang aslinya tidak ada
 4. Mengecek nilai unique genres berfungsi mempermudah inputan user dalam memilih genre nantinya
-5. mengecek nilai unique publisher berfungsi mengetahui publishe apa saja didalam data
-6. Mengurutkan berdasarkan genre: agar model lebih mudah mencari berdasarkan genre
-7. Melakukan normalisasi terhadap kolom metacritic_review_count, user_review_count, developer, publiser, esrb. Dengan cara mereplace value string didalam kolom dengan nilai kosong. berfungsi agar kolom hanya memiliki nilai numeric
-8. Merubah type data metacritic_review_count, metacritic_review_score, user_review_count, user_review_score menjadi int dan float. agar type data kolom lebih sesuai dengan valuenya
-9. membuat kolom combined_features dari kolom name, developer, publisher, genre, esrb. Membuat agar kolom penting menjadi satu kolom, berfungsi mempemudah fungsi tf-idf untuk hanya fokus ke satu kolom
-10. menormalisasi kolom combined_features, berfungsi untuk menyeragamkan text agar mudah menghitung cosine similarity mengunakan tf-idf
+5. Mengurutkan berdasarkan genre: agar model lebih mudah mencari berdasarkan genre
+6. Melakukan normalisasi terhadap kolom metacritic_review_count, user_review_count, developer, publiser, esrb. Dengan cara mereplace value string didalam kolom dengan nilai kosong. berfungsi agar kolom hanya memiliki nilai numeric
+7. Merubah type data metacritic_review_count, metacritic_review_score, user_review_count, user_review_score menjadi int dan float. agar type data kolom lebih sesuai dengan valuenya
+8. membuat kolom combined_features dari kolom name, developer, publisher, genre, esrb. Membuat agar kolom penting menjadi satu kolom, berfungsi mempemudah fungsi tf-idf untuk hanya fokus ke satu kolom
+9. menormalisasi kolom combined_features, berfungsi untuk menyeragamkan text agar mudah menghitung cosine similarity mengunakan tf-idf
+10. Membuat Daftar Preferensi pengguna: Berfungsi menampung preferensi game pilihan pengguna.
+11. TF-IDF Vectorizer : berfugsi merubah teks menjadi bentuk numeric, yang akan digunakan dalam cosine similarity
+12. Menghitung Cosine Similarity : berfungsi menghitung kemiripan antara item-item didalam game berdasarkan vektor yang telah diubah TF-IDF
 
 ## Modeling
-Model yang digunakan adalah content base filtering, alasannya agar dapat merekomendasikan game berdasarkan kesamaan fitur yang mereka miliki, dalam hal ini genres dan publisher. Content base filtering sendiri dapat merekomendasikan games tanpa perlu data pengguna lain, yang mana dalam hal ini cocok dengan type dataset saya.
+## Model yang digunakan 
+content base filtering, Mengambil pemahaman mengenai content apa yang pernah disukai, lalu memberikan rekomendasi konten baru, sesuai dengan konten yang pernah disuakai dimasalalu.
 
-## Fungsi tf-idf
-- TF-IDF berfungsi sebagai fitur extractor, dimana akan merubah text dalam kolom combined_features, menjadi nilai numerik agar lebih mudah dimengerti oleh algoritma, untuk menghitung kemiripan (cosine similarity)
-- TF menghitung seberapa sering sebuah angka muncul dalam dokumen
-- IDF memberikan bobot lebih rendah terhadap kata-kata yang muncul dibanyak dokumen, dan bobot lebih tinggi terhadap kata-kata yang jarang muncul di banyak dokumen
-
-## Cosine Similarity
-- berfungsi menghitung kemiripan antara item-item didalam game berdasarkan vektor yang telah diubah TF-IDF
+## Alur Kerja Sistem yang dibuat
+1. kolom diubah menjadi nilai numeric mengguankan TF-IDF
+2. Kolom dihitung kesamaannya menggunakan cosine Similarity
+3. Mengambil data preferensi dari pengguna yang sudah dibaut di array user_preference
+4. Setelah genre dimasukkan, akan dicari nama-nama game teratas berdasarkan metacritic_review_score, secara menurun, besar ke kecil
+5. Rekomendasi game didapatkan, berdasarkan nama-nama game teratas
 
 ## parameter yang digunakan
-- TF-IDF mengunakan stop_words='english'
-- cosine_similarity mengunakan 2 parameter yang sama, yakni tfidf_matrix
+Content base filtering yang saya buat menggunakan parameter : genre, top_n=5, user_preferences, metacritic_review_score
 
 ## penjelasan parameter
-- stop_words='english' memberitahu tfidfVectorizer untuk mengabaikan kata-kata umum dalam bahasa inggris seperti (the, in, is, dll)
-- tfidf_matrix, menampung nilai matriks.
-- cosine_similarity akan menghitung kemiripan antara setiap baris di matriks pertama dengan setiap baris di matriks kedua
-
-## Membuat fungsi rekomendasi berdasarkan genre
-- fungsi ini akan mengembalikan nilai genre sesuai dengan inputan, dan mencarikan nama games dengan genre yang sama
-
-## Membuat fungsi rekomendasi berdasarkan publisher
-- fungsi ini akan mengembalikan nilai publisher sesuai dengan inputan, dan mencarikan nama games dengan publisher yang sama
-
-## parameter yang digunakan
-- input value(genre/publisher): menampung value dari inputan
-- top_n=5: memberikan nilai default untuk menampikan 5 nilai teratas
-## note
-urutan dari hasil akan berdasarkan metatric_review_score yang didapat setiap game
+- genre : merupakan nama genre yang dimasukkan pengguna
+- top_n=5 : merupakan nilai default untuk menampilkan 5 game teratas
+- user_preferences : mengambil nama genre untuk dicari preferensinya
+- metacritic_review_score : digunakan sebagai parameter acuan untuk memilih game mana yang akan direkomendasikan.
   
 ## Evaluation
-Matriks Evaluasi yang digunakan merupakan evaluasi kualitatif
+## Metriks yang Digunakan
+- Precision
+- Recall
+- F1-score
 
-dilakukan dengan cara:
+## Penjelasan Matriks
+- Precision : Mengukur relevansi item-item teratas yang direkomendasikan sistem
+- Recall : Mengukur seberapa banyak item relevan yang ditemukan
+- F1-Score : rata-rata harmonis dari Precision dan Recall
 
-- Memilih sebuah genre.
-- Menjalankan sistem untuk mendapatkan daftar game yang direkomendasikan.
-- Secara manual atau subjektif memeriksa apakah game-game yang direkomendasikan terlihat relevan dengan genre yang dimasukkan.
+## Hasil Tiap Genre
+Genre 'Open-World Action':
+- Precision@5: 0.4000
+- Recall@5: 1.0000
+- F1-score@5: 0.5714
+--------------------
+Genre '3D Platformer':
+- Precision@5: 0.2000
+- Recall@5: 1.0000
+- F1-score@5: 0.3333
+--------------------
+Genre 'JRPG':
+- Precision@5: 0.2000
+- Recall@5: 1.0000
+- F1-score@5: 0.3333
+--------------------
+Genre 'Action RPG':
+- Precision@5: 0.0000
+- Recall@5: 0.0000
+- F1-score@5: 0.0000
+--------------------
+Genre 'MOBA':
+- Precision@5: 0.0000
+- Recall@5: 0.0000
+- F1-score@5: 0.0000
+--------------------
+Genre 'Soccer':
+- Precision@5: 0.0000
+- Recall@5: 0.0000
+- F1-score@5: 0.0000
+--------------------
+Genre 'MMORPG':
+- Precision@5: 0.2000
+- Recall@5: 1.0000
+- F1-score@5: 0.3333
+--------------------
+Genre 'Turn-Based Strategy':
+- Precision@5: 0.2000
+- Recall@5: 1.0000
+- F1-score@5: 0.3333
+--------------------
+Genre 'Virtual Life':
+- Precision@5: 0.2000
+- Recall@5: 1.0000
+- F1-score@5: 0.3333
+--------------------
+## Hasil Rata-rata
+- Average Precision at N across all genres: 0.1556
+- Average Recall at N across all genres: 0.6667
+- Average F1-score at N across all genres: 0.2487
 
+## Kesimpulan dari Nilai Rata-rata
+1. Precision = nilai 0.1556 berarti, hanya 15 persen pergenre dari rekomendasi yang diberikan, merupakan nama game yang secara spesifik disebutkan di user_preferences
+2. Recall = nilai 0.6667 berati, ada 66 persen pergenre dari user_preferences yang disebutkan, berhasil muncul dalam 5 rekomendasi game teratas untuk genre yang sesuia
+3. F1-score = nilai 2487 berarti, nilai rata-rata harmonis antara precision dan recall cenderung rendah, sebagai akibat dari nilai precision yang rendah.
 ## insight
-Berdasarkan hasil yang didapatkan, baik melaui pengembangan model atau evaluasi. Model dapat memberikan jawaban rekomendasi game berdasarkan genre yang telah dimasukkan, hal ini sudah sejalan dengan pertanyaan bisnis diawal. Yaitu untuk merekomendasikan games berdasarkan kesukaan genre yang sama.
+1. Sistem sudah berhasil merekomendasikan game dengan genre yang sama dengan kesukaan pengguna
+2. Kesimpulan dari evaluasi adalah, sistem hanya memiliki kemampuan menengah dalam menyebutkan kembali game yang disukai pengguna atau (user_preferences). Nilai precision yang kecil menujukkan kalau nama game yang direkomendasikan oleh sistem, hanya sebagian kecil yang disukai pangguna. nilai f1-score yang rendah juga berarti bahwa kemampuan keseluruhan sistem, masih memiliki ruang yang besar untuk perbaikan
 
+## saran yang bisa diambil
+daftar game yang disukai atau user_preferences bisa ditambah, supaya rekomendasi yang diberikan sistem bisa semakin mendekati game yang disukai pengguna, dan untuk menaikan nilai precision.
 
 **---Ini adalah bagian akhir laporan---**
-
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
