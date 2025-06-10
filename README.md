@@ -62,18 +62,17 @@ Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
 5. Merubah type data metacritic_review_count, metacritic_review_score, user_review_count, user_review_score menjadi int dan float. agar type data kolom lebih sesuai dengan valuenya
 6. membuat kolom combined_features dari kolom name, developer, publisher, genre, esrb. Membuat agar kolom penting menjadi satu kolom, berfungsi mempemudah fungsi tf-idf untuk hanya fokus ke satu kolom
 7. menormalisasi kolom combined_features, berfungsi untuk menyeragamkan text agar mudah menghitung cosine similarity mengunakan tf-idf
-8. Membuat Daftar Preferensi pengguna: Berfungsi menampung preferensi game pilihan pengguna.
-9. TF-IDF Vectorizer : berfugsi merubah teks menjadi bentuk numeric, yang akan digunakan dalam cosine similarity
+8. TF-IDF Vectorizer : berfungsi merubah teks menjadi bentuk numeric, yang akan digunakan dalam cosine similarity
 
 ## Modeling
 ## Model yang digunakan 
 content base filtering, Mengambil pemahaman mengenai content apa yang pernah disukai, lalu memberikan rekomendasi konten baru, sesuai dengan konten yang pernah disuakai dimasalalu.
 
 ## Alur Kerja Sistem yang dibuat
-1. kolom diubah menjadi nilai numeric mengguankan TF-IDF
-2. Kolom dihitung kesamaannya menggunakan cosine Similarity
-3. Mengambil data preferensi dari pengguna yang sudah dibaut di array user_preference
-4. Setelah genre dimasukkan, akan dicari nama-nama game teratas berdasarkan metacritic_review_score, secara menurun, besar ke kecil
+1. Kolom dihitung kesamaannya menggunakan cosine Similarity
+2. Fungsi rekomendasi berdasarkan genre akan dibuat, untuk mencari game berdasarkan genre
+3. Membuat data preferensi dari pengguna di array user_preference
+4. Fungsi rekomendasi akan dipanggil, berdasarkan genre game dari user_preferences
 5. Rekomendasi game didapatkan, berdasarkan nama-nama game teratas
 
 ## parameter yang digunakan
