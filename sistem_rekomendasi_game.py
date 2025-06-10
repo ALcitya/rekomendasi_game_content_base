@@ -61,6 +61,24 @@ df.info()
 
 """Dataset mentah memiliki total 13390 baris, kebanyakan bertype object, dan dua kolom bertype int64
 
+### Mengecek Duplikasi
+"""
+
+df.duplicated().sum()
+
+"""tidak terdapat baris dengan nilai yang sama
+
+---
+
+fungsi duplicated mengambil baris yang memiliki duplikasi, dan sum menghitung jumlah duplikasi yang ada
+
+### Mengecek nilai unik Kolom Genres
+"""
+
+df['genres'].unique()
+
+"""Menjabarkan nilai unique dari genres, sebagai pertimbangan masukan untuk fungsi rekomendasi nanti
+
 # Data Preparation
 
 ## Mengatasi missing value
@@ -91,17 +109,6 @@ df_clean.isnull().sum()
 
 """Terlihat tidak adanya lagi missing value disetiap kolom
 
-## Mengecek duplikasi
-"""
-
-df_clean.duplicated().sum()
-
-"""tidak terdapat baris dengan nilai yang sama
-
----
-
-fungsi duplicated mengambil baris yang memiliki duplikasi, dan sum menghitung jumlah duplikasi yang ada
-
 ## Menghapus kolom
 """
 
@@ -111,13 +118,6 @@ df_clean = df_clean.drop('Unnamed: 0', axis=1)
 
 ---
 fungsi drop akan langsung menghapus nama kolom dalam argumen, dalam hal ini 'Unnamed: 0'
-
-## Mengecek Nilai Unik
-"""
-
-df_clean['genres'].unique()
-
-"""Menjabarkan nilai unique dari genres, sebagai pertimbangan masukan untuk fungsi rekomendasi nanti
 
 ## Mengurutkan berdasarkan Genre Games
 """
@@ -210,23 +210,6 @@ df_clean['combined_features']=df_clean['combined_features'].apply(clean_text)
 fungsi text.lower mengubah setiap text menjadi lower case.
 fungsi re.sub menghapus tanda baca dan angka untuk setiap text
 
-## Membuat Daftar Preferensi Pengguna
-"""
-
-user_preferences = {
-    "Open-World Action": ["The Legend of Zelda: Ocarina of Time", "Grand Theft Auto IV"],
-    "3D Platformer": ["Super Mario Galaxy"],
-    "JRPG": ["Persona 5 Royal"],
-    "Action RPG": ["Diablo III"],
-    "MOBA":["Dota 2"],
-    "Soccer":["FIFA 21"],
-    "MMORPG":["World of Warcraft"],
-    "Turn-Based Strategy":["Total War: Shogun 2"],
-    "Virtual Life":["The Sims"]
-}
-
-"""user_preferences berfungsi menampung preferensi games pilihan pengguna, berdasarkan 10 genre teratas
-
 ## TF-IDF Vectorizer
 """
 
@@ -242,6 +225,8 @@ tfidf_matrix = tfidf.fit_transform(df_clean['combined_features'])
 fungsi **fit** belajar mengenail vocabulary dari kolom combined_features, untuk mengetahui nilai unique dan distribusi didalam kolom
 fungsi **transform**, untuk mengubah teks menjadi bentuk numeric
 
+# Model Development dengan Content Based Filtering
+
 ## Menghitung cosine similarity
 """
 
@@ -251,8 +236,6 @@ print('Ukuran matriks cosine similarity:', cosine_sim.shape)
 """cosine_sim, berfungsi untuk menghitung similarity antara 2 arrays, dalam hal ini, saya menghitung cosine similarity dalam setiap permainan.
 fungsi **shape** mencetak ukuran dari matriks dalam hal ini kesamaan antara setiap game dengan game yang lain, karena tfidf_matrix dipanggil 2 kali.
 nilai 9902 mewakili baris dan kolom, juga dapat berarti jumlah game dalam dataset yang sudah dibersihkan
-
-# Model Development dengan Content Based Filtering
 
 ## Membuat fungsi rekomendasi berdasarkan genre
 """
@@ -277,7 +260,23 @@ fungsi na=False akan mengangap valued nan sebagai tidak ada
 **if genre_games.empty** mengecek apakah data yang dimasukkan tidak ada didalam kolom
 **recommended_games** mengurutkan variabel genre_games berdasrkan kolom metacritic_review_score secara Menurun
 **fungsi return** akan mengembalikan nilai value, dalam hal ini genres dan name
+
+### Membuat daftar preferensi pengguna
 """
+
+user_preferences = {
+    "Open-World Action": ["The Legend of Zelda: Ocarina of Time", "Grand Theft Auto IV"],
+    "3D Platformer": ["Super Mario Galaxy"],
+    "JRPG": ["Persona 5 Royal"],
+    "Action RPG": ["Diablo III"],
+    "MOBA":["Dota 2"],
+    "Soccer":["FIFA 21"],
+    "MMORPG":["World of Warcraft"],
+    "Turn-Based Strategy":["Total War: Shogun 2"],
+    "Virtual Life":["The Sims"]
+}
+
+"""user_preferences berfungsi menampung preferensi games pilihan pengguna, berdasarkan 10 genre teratas"""
 
 recommended_games_by_genre = {}
 
