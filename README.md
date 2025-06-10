@@ -64,7 +64,6 @@ Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
 7. menormalisasi kolom combined_features, berfungsi untuk menyeragamkan text agar mudah menghitung cosine similarity mengunakan tf-idf
 8. Membuat Daftar Preferensi pengguna: Berfungsi menampung preferensi game pilihan pengguna.
 9. TF-IDF Vectorizer : berfugsi merubah teks menjadi bentuk numeric, yang akan digunakan dalam cosine similarity
-10. Menghitung Cosine Similarity : berfungsi menghitung kemiripan antara item-item didalam game berdasarkan vektor yang telah diubah TF-IDF
 
 ## Modeling
 ## Model yang digunakan 
@@ -78,24 +77,15 @@ content base filtering, Mengambil pemahaman mengenai content apa yang pernah dis
 5. Rekomendasi game didapatkan, berdasarkan nama-nama game teratas
 
 ## parameter yang digunakan
-Content base filtering yang saya buat menggunakan parameter : genre, top_n=5, user_preferences, metacritic_review_score
+- Content base filtering yang saya buat menggunakan parameter : genre, top_n=5, user_preferences, metacritic_review_score
+- Cosine Similarity menggunakan 2 buah parameter tfidf-matrix
 
 ## penjelasan parameter
 - genre : merupakan nama genre yang dimasukkan pengguna
 - top_n=5 : merupakan nilai default untuk menampilkan 5 game teratas
 - user_preferences : mengambil nama genre untuk dicari preferensinya
 - metacritic_review_score : digunakan sebagai parameter acuan untuk memilih game mana yang akan direkomendasikan.
-  
-## Evaluation
-## Metriks yang Digunakan
-- Precision
-- Recall
-- F1-score
-
-## Penjelasan Matriks
-- Precision : Mengukur relevansi item-item teratas yang direkomendasikan sistem
-- Recall : Mengukur seberapa banyak item relevan yang ditemukan
-- F1-Score : rata-rata harmonis dari Precision dan Recall
+- tfidf-matrix : digunakan untuk menampung nilai matrix dari kesamaan yang sudah dibuat
   
 ## Hasil Rekomendasi setiap Genre
 'Open-World Action':
@@ -179,6 +169,17 @@ Content base filtering yang saya buat menggunakan parameter : genre, top_n=5, us
  -  ['Virtual Life']                Animal Crossing
 
  --------------------
+ 
+## Evaluation
+## Metriks yang Digunakan
+- Precision
+- Recall
+- F1-score
+
+## Penjelasan Matriks
+- Precision : Mengukur relevansi item-item teratas yang direkomendasikan sistem
+- Recall : Mengukur seberapa banyak item relevan yang ditemukan
+- F1-Score : rata-rata harmonis dari Precision dan Recall
 
 ## Hasil Tiap Genre
 Genre 'Open-World Action':
