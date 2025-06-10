@@ -36,9 +36,8 @@ Dataset ini diambil dari Metacritic. sebuah platform kolektif milik pemain game.
 - dataset ini memiliki 12 kolom
 
 ## Kondisi Awal Dataset
-Dataset ini memiliki 2 kolom yang terdapat missing value, yakni kolom user_review_count 1557 missing value. Dan kolom esrb sebanyak 2103 missing value
-
-Selanjutnya, uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
+- Dataset ini memiliki 2 kolom yang terdapat missing value, yakni kolom user_review_count 1557 missing value. Dan kolom esrb sebanyak 2103 missing value
+- Dataset ini tidak memiliki nilai duplikasi
 
 Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
 - Unnamed: 0 : merupakan kolom yang terbuat ketika library kagglehub mengambil dataset
@@ -57,17 +56,15 @@ Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
 ## Data Preparation
 
 1. Mengatasi missing value di kolom user_review_count dan esrb. Dengan cara menghapus baris yang terdapat missing value: berfungsi untuk mempermudah pelatihan model
-2. Mengecek Duplikasi : berfungsi mencegah dataset memiliki baris yang sama
-3. Menghapus kolom Unnamed : 0 berfungsi menghilangkan kolom yang aslinya tidak ada
-4. Mengecek nilai unique genres berfungsi mempermudah inputan user dalam memilih genre nantinya
-5. Mengurutkan berdasarkan genre: agar model lebih mudah mencari berdasarkan genre
-6. Melakukan normalisasi terhadap kolom metacritic_review_count, user_review_count, developer, publiser, esrb. Dengan cara mereplace value string didalam kolom dengan nilai kosong. berfungsi agar kolom hanya memiliki nilai numeric
-7. Merubah type data metacritic_review_count, metacritic_review_score, user_review_count, user_review_score menjadi int dan float. agar type data kolom lebih sesuai dengan valuenya
-8. membuat kolom combined_features dari kolom name, developer, publisher, genre, esrb. Membuat agar kolom penting menjadi satu kolom, berfungsi mempemudah fungsi tf-idf untuk hanya fokus ke satu kolom
-9. menormalisasi kolom combined_features, berfungsi untuk menyeragamkan text agar mudah menghitung cosine similarity mengunakan tf-idf
-10. Membuat Daftar Preferensi pengguna: Berfungsi menampung preferensi game pilihan pengguna.
-11. TF-IDF Vectorizer : berfugsi merubah teks menjadi bentuk numeric, yang akan digunakan dalam cosine similarity
-12. Menghitung Cosine Similarity : berfungsi menghitung kemiripan antara item-item didalam game berdasarkan vektor yang telah diubah TF-IDF
+2. Menghapus kolom Unnamed : 0 berfungsi menghilangkan kolom yang aslinya tidak ada
+3. Mengurutkan berdasarkan genre: agar model lebih mudah mencari berdasarkan genre
+4. Melakukan normalisasi terhadap kolom metacritic_review_count, user_review_count, developer, publiser, esrb. Dengan cara mereplace value string didalam kolom dengan nilai kosong. berfungsi agar kolom hanya memiliki nilai numeric
+5. Merubah type data metacritic_review_count, metacritic_review_score, user_review_count, user_review_score menjadi int dan float. agar type data kolom lebih sesuai dengan valuenya
+6. membuat kolom combined_features dari kolom name, developer, publisher, genre, esrb. Membuat agar kolom penting menjadi satu kolom, berfungsi mempemudah fungsi tf-idf untuk hanya fokus ke satu kolom
+7. menormalisasi kolom combined_features, berfungsi untuk menyeragamkan text agar mudah menghitung cosine similarity mengunakan tf-idf
+8. Membuat Daftar Preferensi pengguna: Berfungsi menampung preferensi game pilihan pengguna.
+9. TF-IDF Vectorizer : berfugsi merubah teks menjadi bentuk numeric, yang akan digunakan dalam cosine similarity
+10. Menghitung Cosine Similarity : berfungsi menghitung kemiripan antara item-item didalam game berdasarkan vektor yang telah diubah TF-IDF
 
 ## Modeling
 ## Model yang digunakan 
@@ -99,6 +96,89 @@ Content base filtering yang saya buat menggunakan parameter : genre, top_n=5, us
 - Precision : Mengukur relevansi item-item teratas yang direkomendasikan sistem
 - Recall : Mengukur seberapa banyak item relevan yang ditemukan
 - F1-Score : rata-rata harmonis dari Precision dan Recall
+  
+## Hasil Rekomendasi setiap Genre
+'Open-World Action':
+        genres                                     
+ -  ['Open-World Action']     The Legend of Zelda: Ocarina of Time
+ -  ['Open-World Action']                      Grand Theft Auto IV
+ -  ['Open-World Action']                       Grand Theft Auto V
+ -  ['Open-World Action']                    Red Dead Redemption 2
+ -  ['Open-World Action']  The Legend of Zelda: Breath of the Wild
+ 
+ --------------------
+ '3D Platformer':                
+         genres                  
+ -   ['3D Platformer']  Super Mario Galaxy 2
+ -  ['3D Platformer']   Super Mario Odyssey
+ -   ['3D Platformer']    Super Mario Galaxy
+ -  ['3D Platformer']             Astro Bot
+ -  ['3D Platformer']  Super Mario 3D World,
+
+ --------------------
+ 'JRPG':        
+         genres                  
+ -   ['JRPG']       Persona 5 Royal
+ -  ['JRPG']          Chrono Cross
+ -   ['JRPG']      Final Fantasy IX
+ -   ['JRPG']  Metaphor: ReFantazio
+ -  ['JRPG']             Persona 5
+
+ --------------------
+ 'Action RPG':              
+         genres                               
+ -   ['Action RPG']                         Elden Ring
+ -   ['Action RPG']                             Diablo
+ -   ['Action RPG']  Elden Ring: Shadow of the Erdtree
+ -  ['Action RPG']                      Mass Effect 3
+ -  ['Action RPG']          Final Fantasy VII Rebirth
+
+ --------------------
+ 'MOBA':         
+         genres                 
+ -  ['MOBA']  Heroes of the Storm
+ -  ['MOBA']                SMITE
+ -  ['MOBA']    League of Legends
+ -  ['MOBA']         Awesomenauts
+ -  ['MOBA']              Demigod
+
+ --------------------
+ 'Soccer':              
+         genres                                         
+ -  ['Soccer Sim']                       Pro Evolution Soccer 2
+ -  ['Soccer Sim']  World Soccer Winning Eleven 7 International
+ -  ['Soccer Sim']  World Soccer Winning Eleven 8 International
+ -  ['Soccer Sim']                               FIFA Soccer 12
+ -  ['Soccer Sim']                               FIFA Soccer 13
+
+ --------------------
+ 'MMORPG':          
+         genres                                       
+ -  ['MMORPG']                          World of Warcraft
+ -  ['MMORPG']               Final Fantasy XIV: Endwalker
+ -  ['MMORPG']  World of Warcraft: Wrath of the Lich King
+ -  ['MMORPG']     World of Warcraft: The Burning Crusade
+ -  ['MMORPG']               World of Warcraft: Cataclysm
+
+ --------------------
+ 'Turn-Based Strategy':                       
+         genres                                      
+ -  ['Turn-Based Strategy']                        Total War: Shogun 2
+ -  ['Turn-Based Strategy']          Shogun: Total War Warlord Edition
+ -   ['Turn-Based Strategy']     Age of Wonders II: The Wizard's Throne
+ -  ['Turn-Based Strategy']  Total War: Shogun 2 - Fall of the Samurai
+ -  ['Turn-Based Strategy']                       Total War: WARHAMMER
+
+ --------------------
+ 'Virtual Life':                
+         genres                           
+ -  ['Virtual Life']                       The Sims
+ -  ['Virtual Life']  Animal Crossing: New Horizons
+ -  ['Virtual Life']                     The Sims 2
+ -  ['Virtual Life']      Animal Crossing: New Leaf
+ -  ['Virtual Life']                Animal Crossing
+
+ --------------------
 
 ## Hasil Tiap Genre
 Genre 'Open-World Action':
