@@ -71,7 +71,7 @@ content base filtering, Mengambil pemahaman mengenai content apa yang pernah dis
 ## Alur Kerja Sistem yang dibuat
 1. Kolom dihitung kesamaannya menggunakan cosine Similarity
 2. Fungsi rekomendasi berdasarkan genre akan dibuat, untuk mencari game berdasarkan genre
-3. Membuat data preferensi dari pengguna di array user_preference
+3. Membuat data preferensi dari pengguna di array user_preferences
 4. Fungsi rekomendasi akan dipanggil, berdasarkan genre game dari user_preferences
 5. Rekomendasi game didapatkan, berdasarkan nama-nama game teratas
 
