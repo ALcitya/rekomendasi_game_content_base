@@ -86,7 +86,7 @@ df['genres'].unique()
 
 df.isnull().sum()
 
-"""Terdapat 2 kolom yang memiliki missing value, yaitu user_review_count dan esrb.
+"""Terdapat 5 kolom yang memiliki missing value, yaitu metacritic_review_count, user_review_count, developer, publisher, dan esrb.
 
 
 ---
