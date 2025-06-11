@@ -36,7 +36,13 @@ Dataset ini diambil dari Metacritic. sebuah platform kolektif milik pemain game.
 - dataset ini memiliki 12 kolom
 
 ## Kondisi Awal Dataset
-- Dataset ini memiliki 2 kolom yang terdapat missing value, yakni kolom user_review_count 1557 missing value. Dan kolom esrb sebanyak 2103 missing value
+- Dataset ini memiliki 5 kolom yang terdapat missing value, yakni:
+    1. kolom metacritic_review_count 6 missing value
+    2. kolom user_review_count 1557 missing value.
+    3. Kolom developer 10 missing value
+    4. Kolom Publisher 10 missing value
+    5. kolom esrb sebanyak 2103 missing value
+       
 - Dataset ini tidak memiliki nilai duplikasi
 
 Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
@@ -55,7 +61,7 @@ Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
 
 ## Data Preparation
 
-1. Mengatasi missing value di kolom user_review_count dan esrb. Dengan cara menghapus baris yang terdapat missing value: berfungsi untuk mempermudah pelatihan model
+1. Mengatasi missing value : Dengan cara menghapus baris yang terdapat missing value berfungsi untuk mempermudah pelatihan model
 2. Menghapus kolom Unnamed : 0 berfungsi menghilangkan kolom yang aslinya tidak ada
 3. Mengurutkan berdasarkan genre: agar model lebih mudah mencari berdasarkan genre
 4. Melakukan normalisasi terhadap kolom metacritic_review_count, user_review_count, developer, publiser, esrb. Dengan cara mereplace value string didalam kolom dengan nilai kosong. berfungsi agar kolom hanya memiliki nilai numeric
